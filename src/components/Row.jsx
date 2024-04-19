@@ -1,8 +1,9 @@
 import React from "react";
+import "../styles/Row.scss";
 
 export default function Wordle({ word }) {
   return (
-    <div>
+    <div className="row">
       {word.split("").map((letter, index) => {
         return (
           <div className="letter" key={index}>
