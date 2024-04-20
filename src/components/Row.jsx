@@ -1,27 +1,22 @@
 import React from "react";
 import "../styles/Row.scss";
 
-export default function Wordle({
-  word,
-  markAsSolution,
-  markPresentAndAbsentLetters,
-  solution,
-  bounceOnError,
-}) {
+export default function Row({ word, applyRotation, solution, bounceOnError }) {
   return (
     <div className={`row ${bounceOnError && "row--bounce"}`}>
       {word.split("").map((letter, index) => {
-        const bgClass = solution.includes(letter) ? "present" : "absent";
+        const bgClass =
+          solution[index] === letter
+            ? "correct"
+            : solution.includes(letter)
+            ? "present"
+            : "absent";
 
         return (
           <div
-            className={`letter ${
-              markAsSolution && `correct rotate--${index + 1}00`
-            } ${
-              markPresentAndAbsentLetters && `${bgClass} rotate--${index + 1}00`
-            } ${letter !== " " && "letter--active"} ${
-              solution[index] === letter && "correct"
-            }`}
+            className={`letter ${bgClass} ${
+              applyRotation && `rotate--${index + 1}00`
+            } ${letter !== " " && "letter--active"}`}
             key={index}
           >
             {letter}
