@@ -2,9 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import "../styles/Wordle.scss";
 import Row from "./Row";
 import Keyboard from "./Keyboard";
-import { LETTERS, potentialWords } from "../data/lettersAndWords";
+import {
+  LETTERS,
+  potentialWords,
+  potentialSolution,
+} from "../data/lettersAndWords";
 
-const SOLUTION = "table";
+const SOLUTION =
+  potentialSolution[Math.floor(Math.random() * potentialSolution.length)];
+console.log(SOLUTION);
 
 export default function Wordle() {
   const [guesses, setGuesses] = useState([
@@ -58,12 +64,11 @@ export default function Wordle() {
   const hitEnter = () => {
     if (activeLetterIndex === 5) {
       const currentGuess = guesses[activeRowIndex];
-      console.log(currentGuess);
 
       if (!potentialWords.includes(currentGuess)) {
         setNotification("NOT IN THE WORD LIST");
       } else if (failedGuesses.includes(currentGuess)) {
-        setNotification("WORD ALREADY TRIED");
+        setNotification("WORD TRIED ALREADY");
       } else if (currentGuess === SOLUTION) {
         setSolutionFound(true);
         setNotification("WELL DONE");
@@ -74,6 +79,7 @@ export default function Wordle() {
         [...currentGuess].forEach((letter, index) => {
           if (SOLUTION[index] === letter) correctLetters.push(letter);
         });
+
         setCorrectLetters([...new Set(correctLetters)]);
 
         setPresentLetters([
@@ -82,7 +88,6 @@ export default function Wordle() {
             ...[...currentGuess].filter((letter) => SOLUTION.includes(letter)),
           ]),
         ]);
-        console.log(`Present letters set ${presentLetters}`);
 
         setAbsentLetters([
           ...new Set([
@@ -153,8 +158,10 @@ export default function Wordle() {
           <Row
             key={index}
             word={guess}
-            markAsSoluction={solutionFound && activeRowIndex === index}
-            markPresentAndAbsentLetters={activeRowIndex > index}
+            applyRotation={
+              activeRowIndex > index ||
+              (solutionFound && activeRowIndex === index)
+            }
             solution={SOLUTION}
             bounceOnError={
               notification !== "WELL DONE" &&
@@ -164,6 +171,14 @@ export default function Wordle() {
           />
         );
       })}
+      <Keyboard
+        presentLetters={presentLetters}
+        correctLetters={correctLetters}
+        absentLetters={absentLetters}
+        typeLetter={typeLetter}
+        hitEnter={hitEnter}
+        hitBackspace={hitBackspace}
+      />
     </div>
   );
 }
