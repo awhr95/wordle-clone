@@ -30,44 +30,43 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      transform: rotateX(180);
+      transform: rotateX(180deg);
       backface-visibility: hidden;
     }
   }
-}
+  .rotate {
+    &--100 {
+      animation: 0.5s linear 0.1s rotate forwards;
+    }
+    &--200 {
+      animation: 0.5s linear 0.2s rotate forwards;
+    }
+    &--300 {
+      animation: 0.5s linear 0.3s rotate forwards;
+    }
+    &--400 {
+      animation: 0.5s linear 0.4s rotate forwards;
+    }
+    &--500 {
+      animation: 0.5s linear 0.5s rotate forwards;
+    }
+  }
 
-.rotate {
-  &--100 {
-    animation: 0.5s linear 0.1s rotate forwards;
+  .present {
+    .back {
+      background-color: #b59f3b;
+    }
   }
-  &--200 {
-    animation: 0.5s linear 0.2s rotate forwards;
-  }
-  &--300 {
-    animation: 0.5s linear 0.3s rotate forwards;
-  }
-  &--400 {
-    animation: 0.5s linear 0.4s rotate forwards;
-  }
-  &--500 {
-    animation: 0.5s linear 0.5s rotate forwards;
-  }
-}
 
-.present {
-  .back {
-    background-color: #b59f3b;
+  .absent {
+    .back {
+      background-color: #3a3a3c;
+    }
   }
-}
-
-.absent {
-  .back {
-    background-color: #3a3a3c;
-  }
-}
-.correct {
-  .back {
-    background-color: #538d4e;
+  .correct {
+    .back {
+      background-color: #538d4e;
+    }
   }
 }
 
