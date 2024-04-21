@@ -10,7 +10,6 @@ import {
 
 const SOLUTION =
   potentialSolution[Math.floor(Math.random() * potentialSolution.length)];
-console.log(SOLUTION);
 
 export default function Wordle() {
   const [guesses, setGuesses] = useState([
@@ -37,7 +36,6 @@ export default function Wordle() {
   }, []);
 
   const typeLetter = (letter) => {
-    console.log("LETTER TYPED", letter);
     if (activeLetterIndex < 5) {
       setNotification("");
 
@@ -53,7 +51,6 @@ export default function Wordle() {
   };
 
   const replaceCharacter = (string, index, replacement) => {
-    console.log(string);
     return (
       string.slice(0, index) +
       replacement +
@@ -62,6 +59,8 @@ export default function Wordle() {
   };
 
   const hitEnter = () => {
+    console.log(`active row: ${activeRowIndex}`);
+
     if (activeLetterIndex === 5) {
       const currentGuess = guesses[activeRowIndex];
 
@@ -95,6 +94,9 @@ export default function Wordle() {
             ...[...currentGuess].filter((letter) => !SOLUTION.includes(letter)),
           ]),
         ]);
+        if (activeRowIndex === 5 && !solutionFound) {
+          setNotification(SOLUTION);
+        }
 
         setFailedGuesses([...failedGuesses, currentGuess]);
         setActiveRowIndex((index) => index + 1);
@@ -150,7 +152,11 @@ export default function Wordle() {
       onKeyDown={handleKeyDown}
     >
       <h1 className="title">Wordle Clone</h1>
-      <div className={`notification ${solutionFound && "notification--green"}`}>
+      <div
+        className={`notification ${solutionFound && "notification--green"} ${
+          !solutionFound && "notification--white"
+        }`}
+      >
         {notification}
       </div>
       {guesses.map((guess, index) => {
