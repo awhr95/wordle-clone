@@ -28,6 +28,21 @@ export default function Wordle() {
   const [correctLetters, setCorrectLetters] = useState([]);
   const [presentLetters, setPresentLetters] = useState([]);
   const [absentLetters, setAbsentLetters] = useState([]);
+  const [solution, setSolution] = useState("");
+
+  const storedWord = localStorage.getItem("solution");
+  if (storedWord) {
+    console.log(JSON.parse(storedWord));
+    const { word, storedDate } = JSON.parse(storedWord);
+    const currentDate = new Date().toDateString();
+    if (currentDate === storedDate) {
+      setSolution(word);
+      return;
+    }
+  }
+  if (!storedWord) {
+    setSolution(SOLUTION);
+  }
 
   const wordleRef = useRef();
 
