@@ -28,6 +28,28 @@ export default function Wordle() {
   const [correctLetters, setCorrectLetters] = useState([]);
   const [presentLetters, setPresentLetters] = useState([]);
   const [absentLetters, setAbsentLetters] = useState([]);
+  const [solution, setSolution] = useState("");
+
+  useEffect(() => {
+    const storedWord = localStorage.getItem("solution");
+    console.log(storedWord);
+    if (storedWord) {
+      console.log(JSON.parse(storedWord));
+      const { word, storedDate } = JSON.parse(storedWord);
+      const currentDate = new Date().toDateString();
+      if (currentDate === storedDate) {
+        setSolution(word);
+        return;
+      }
+    }
+    if (!storedWord) {
+      const currentDate = new Date().toDateString();
+
+      setSolution(SOLUTION);
+      const newStoredData = { word: solution, storedDate: currentDate };
+      localStorage.setItem("solution", JSON.stringify(newStoredData));
+    }
+  }, []);
 
   const wordleRef = useRef();
 
@@ -68,10 +90,10 @@ export default function Wordle() {
         setNotification("NOT IN THE WORD LIST");
       } else if (failedGuesses.includes(currentGuess)) {
         setNotification("WORD TRIED ALREADY");
-      } else if (currentGuess === SOLUTION) {
+      } else if (currentGuess === solution) {
         setSolutionFound(true);
         setNotification("WELL DONE");
-        setCorrectLetters([...SOLUTION]);
+        setCorrectLetters([...solution]);
       } else {
         let correctLetters = [];
 
@@ -84,18 +106,18 @@ export default function Wordle() {
         setPresentLetters([
           ...new Set([
             ...presentLetters,
-            ...[...currentGuess].filter((letter) => SOLUTION.includes(letter)),
+            ...[...currentGuess].filter((letter) => solution.includes(letter)),
           ]),
         ]);
 
         setAbsentLetters([
           ...new Set([
             ...absentLetters,
-            ...[...currentGuess].filter((letter) => !SOLUTION.includes(letter)),
+            ...[...currentGuess].filter((letter) => !solution.includes(letter)),
           ]),
         ]);
         if (activeRowIndex === 5 && !solutionFound) {
-          setNotification(SOLUTION);
+          setNotification(solution);
         }
 
         setFailedGuesses([...failedGuesses, currentGuess]);
@@ -168,7 +190,7 @@ export default function Wordle() {
               activeRowIndex > index ||
               (solutionFound && activeRowIndex === index)
             }
-            solution={SOLUTION}
+            solution={solution}
             bounceOnError={
               notification !== "WELL DONE" &&
               notification !== "" &&
